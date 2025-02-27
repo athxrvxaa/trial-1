@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock title %}
+
+{% block body %}
+<div class="container my-3">
+    <h2>Upload Course Completion Certificate</h2>
+    <form action="/" method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label class="form-label">Student Name</label>
+            <input type="text" class="form-control" name="student_name" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Student ID</label>
+            <input type="text" class="form-control" name="student_id" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Course Name</label>
+            <input type="text" class="form-control" name="course_name" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Upload Certificate</label>
+            <input class="form-control" type="file" name="certificate" accept=".pdf,.jpg,.png,.jpeg" required>
+        </div>
+        <button type="submit" class="btn btn-dark">Submit</button>
+    </form>
+</div>
+
+<div class="container my-3">
+    <h2>Uploaded Certificates</h2>
+
+    {% if all_credits|length == 0 %}
+        <div class="alert alert-dark">No submissions found.</div>
+    {% else %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Student ID</th>
+                <th>Course Name</th>
+                <th>Certificate</th>
+                <th>Date Uploaded</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for credit in all_credits %}
+            <tr>
+                <td>{{ credit.student_name }}</td>
+                <td>{{ credit.student_id }}</td>
+                <td>{{ credit.course_name }}</td>
+                <td>
+                    {% if credit.certificate %}
+                        <a href="{{ url_for('static', filename='uploads/' + credit.certificate) }}" target="_blank" class="btn btn-outline-primary btn-sm">View</a>
+                    {% else %}
+                        No File
+                    {% endif %}
+                </td>
+                <td>{{ credit.date_uploaded }}</td>
+                <td>
+                    <a href="/update/{{ credit.id }}" class="btn btn-outline-dark btn-sm">Update</a>
+                    <a href="/delete/{{ credit.id }}" class="btn btn-outline-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock body %}
